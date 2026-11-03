@@ -47,16 +47,6 @@ FROM store_sales;
 SELECT *
 FROM products;
 
--- Here I wanted to join the tables to compare with product numbers to be grouped together to get ready for the first analysis
-
-SELECT *
-FROM sample_sales.online_sales JOIN sample_sales.store_sales
-ON online_sales.ProdNum = store_sales.Prod_Num;
-
--- Both sales tables have their transaction dates, which will be considered for the first analysis.
-
-
-
 -- The above is for me to go back to reference column and data names for analysis. 
 
 /*
@@ -66,39 +56,36 @@ that tell you what period the data covers?"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
-/* I utilize sub-queries to get the the amounts of the store and online sales and then I had to add them up for the overall territory
-I made a second query to show the start and end date of both store and online. demonstrating a 3 year period*/
+-- I will utilize the management, store locations, and store_sales tables.
 
-SELECT state, 
-		(SELECT SUM(SalesTotal)
-			FROM online_sales
-            WHERE ShiptoState LIKE '%massac%') AS OnlineSales,
-            
-		(SELECT SUM(Sale_Amount)
-        FROM store_sales AS SS JOIN store_locations AS SL
-        ON SS.Store_ID = SL.StoreId
-        WHERE SL.State LIKE '%massac%') AS StoreSales,
-            
-		(SELECT SUM(SalesTotal)
-			FROM online_sales
-            WHERE ShiptoState LIKE '%massac%')
-            +
-        (SELECT SUM(Sale_Amount)
-        FROM store_sales AS SS JOIN store_locations AS SL
-        ON SS.Store_ID = SL.StoreId
-        WHERE SL.State LIKE '%massac%') AS totalsales
-FROM (SELECT State
-		FROM store_locations
-        WHERE State LIKE '%massac%') AS storeLOC
-ORDER BY 1 LIMIT 1 ;
+SELECT *
+FROM management AS m 
+JOIN store_locations AS SL ON m.State = SL.State
+JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+WHERE region LIKE 'northeast';
 
+-- The query above is to make sure that I have all the northeast region sales managers and their respective dates.
 
+SELECT region, CONCAT('$', format(sum(Sale_Amount), 2)) AS overallsales
+FROM management AS m 
+JOIN store_locations AS SL ON m.State = SL.State
+JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+WHERE region LIKE 'northeast' and m.state LIKE '%massac%'
+GROUP BY region;
 
-SELECT MIN(OS.Date) AS ONLINESTARTDATE, MAX(OS.Date) AS OnlineEndDate,  MIN(SS.Transaction_Date) AS StoreStartDate,MAX(SS.Transaction_Date) AS StoreEndDate
-FROM online_sales AS OS JOIN store_sales AS SS ON OS.ProdNum = SS.Prod_Num
-WHERE OS.ShiptoState LIKE '%massac%';
+-- The query above is to make sure I get the correct overall sales and converting the output of the summed sales into currency, which I was helped by MS CoPilot
 
--- Query above shows a 3 year period for both the store and online sales with store sales starting in jan. 1st, 2022 and online starting on jan. 6th, 2022, with both ending in dec. 31st, 2025
+SELECT region, m.state AS STATE, CONCAT('$', format(SUM(Sale_Amount), 2)) AS overallsales,
+ MIN(Transaction_Date) AS startdate, MAX(Transaction_Date) as enddate
+FROM management AS m 
+JOIN store_locations AS SL ON m.State = SL.State
+JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+WHERE region LIKE 'northeast' and m.state LIKE '%massac%'
+GROUP BY region, m.state;
+
+/*The query above will be the correct answer to the questions presenteed, in which, for the region being northeast and the assigned state/territory,
+overall sales is 5,733,256.27 starting from Jan. 1st, 2022 to Dec. 31st, 2025. */
+
 
  /*
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -116,12 +103,7 @@ ON SL.StoreId = SS.Store_ID
 WHERE SL.State LIKE '%massac%'
 GROUP BY SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m');
 
--- I decided to keep store sales and online sales monthly sales seperate for analysis. 
-
-SELECT DATE_FORMAT(Date, '%Y-%m'), SUM(SalesTotal)
-FROM online_sales
-WHERE ShiptoState LIKE '%massac%'
-GROUP BY DATE_FORMAT(Date, '%Y-%m');
+-- My first inital query from above provided the answer to the question presented, I ereased the online sales from below after understanding that online sales are its own territory.
 
 
  /*
@@ -130,51 +112,92 @@ Below will be the analysis for the third question presented:  Provide a comparis
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
-/* It seems that I need to obtain the overall revenue from the region, which is 3 states for the northeast. 
-To accomplish this, I will need to use the join clause on management and store sales table along with online sales*/
+-- This query below will demonstrate the overall sales for the region, and a column showing the sales for massachussets
 
--- I utilized microsoft co-pilot and the student guide to help me understand the concepts of sub-querying for these queries compared to how I first did them.
+SELECT region,
+(SELECT CONCAT('$', format(SUM(Sale_Amount), 2)) 
+ FROM management AS m3
+ JOIN store_locations AS SL ON m3.State = SL.State 					
+ JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+ WHERE region LIKE 'northeast') AS overall_regsales,
 
-SELECT region, SUM(SalesTotal) AS onlinesales, 
-(SELECT SUM(Sale_Amount)
+-- The subquery above is adding all the sales including massachussets
+
+ CONCAT('$', format(SUM(Sale_Amount), 2)) AS overall_excMassach_regsales, 
+
+-- the column above excludes the massachusset sales from the overall
+
+(SELECT CONCAT('$', format(SUM(Sale_Amount), 2))
  FROM management AS m2
  JOIN store_locations AS SL ON m2.State = SL.State
  JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
- WHERE region LIKE 'northeast' AND m2.State NOT LIKE '%massac%') AS storesales ,SUM(SalesTotal) +
-(SELECT SUM(Sale_Amount)
- FROM management AS m2
- JOIN store_locations AS SL ON m2.State = SL.State
+ WHERE region LIKE 'northeast' AND m2.state LIKE '%massac%') AS massach_sales
+
+-- The subquery above shows all massachusset sales
+
+ FROM management AS m
+ JOIN store_locations AS SL ON m.State = SL.State
  JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
- WHERE region LIKE 'northeast' AND m2.State NOT LIKE '%massac%') AS overrallregsales
-FROM management AS m join online_sales AS OS
-ON m.State = OS.ShiptoState 
-WHERE region LIKE 'northeast' AND m.State NOT LIKE '%massac%'
-GROUP BY region;
+ WHERE region LIKE 'northeast' AND m.State NOT LIKE '%massac%'
+ GROUP BY region;
+ 
+ -- clauses above goes with the region and region sales from the top select portion
+ 
+ 
+ 
+ /*
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Below will be the analysis for the fouth question presented: What is the number of transactions per month and average transaction amount by product
+category for the sales territory?
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+*/ 
 
 
-/* The Query above is to obtain the overall sales data excluding the massachussets territory and the Query below is the same query from the
-first question to do a comparasion against the whole region*/
+-- For this analysis, I will have to bring in the products table joining the store_sales table.
 
-SELECT state, 
-		(SELECT SUM(SalesTotal)
-			FROM online_sales
-            WHERE ShiptoState LIKE '%massac%') AS OnlineSales,
-            
-		(SELECT SUM(Sale_Amount)
-        FROM store_sales AS SS JOIN store_locations AS SL
-        ON SS.Store_ID = SL.StoreId
-        WHERE SL.State LIKE '%massac%') AS StoreSales,
-            
-		(SELECT SUM(SalesTotal)
-			FROM online_sales
-            WHERE ShiptoState LIKE '%massac%')
-            +
-        (SELECT SUM(Sale_Amount)
-        FROM store_sales AS SS JOIN store_locations AS SL
-        ON SS.Store_ID = SL.StoreId
-        WHERE SL.State LIKE '%massac%') AS totalsales
-FROM (SELECT State
-		FROM store_locations
-        WHERE State LIKE '%massac%') AS storeLOC
-ORDER BY 1 LIMIT 1 ;
+SELECT DATE_FORMAT(inv.Transaction_Date, '%Y-%m') AS dates, COUNT(inv.id) AS transactions, inv.category, avg(inv.Sale_Amount) AS avgsalesamt
 
+FROM (SELECT m.region, m.state, StoreId
+		FROM management AS m
+        JOIN store_locations AS SL
+        ON m.State = SL.State
+        WHERE m.region LIKE 'northeast' AND m.state LIKE '%massac%') AS storesloc 
+JOIN        
+
+ (SELECT SS.id, Store_ID, Prod_Num, p.Categoryid, IC.category, Transaction_Date, Sale_Amount
+FROM inventory_categories AS IC
+JOIN products AS P ON IC.Categoryid = P.Categoryid
+JOIN store_sales AS SS ON P.ProdNum = SS.Prod_Num) AS inv 
+
+ON storesloc.StoreId = inv.Store_ID
+
+GROUP BY  DATE_FORMAT(inv.Transaction_Date, '%Y-%m'), inv.category;
+
+/* I took the concept of sub-quering for tables to get the data I needed, the first subquery is to get data for the locations regarding the region and territory.
+The seconf subquery was to get the data for product info and transactions. I joined these two subqueries to get the overall data, in which I confirmed by using select all first. */
+
+
+
+/*
+SELECT *
+FROM inventory_categories AS IC join inventory_subcategories AS INS
+ON IC.Categoryid = INS.Categoryid
+JOIN products AS p ON INS.Categoryid = p.Categoryid
+WHERE IC.Category LIKE '%textbook%';
+
+SELECT *
+FROM store_sales AS SS JOIN store_locations AS SL
+ON SS.Store_ID = SL.StoreId
+WHERE SL.State LIKE '%massac%' AND Prod_Num = '105350-T'
+ORDER BY 2 ASC;
+
+The above queries were to make sure I got the transactions correctly */
+
+
+
+ /*
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Below will be the analysis for the fifth question presented: Can you provide a ranking of in-store sales performance by each store in the sales territory, or a
+ranking of online sales performance by state within an online sales territory?
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+*/ 
