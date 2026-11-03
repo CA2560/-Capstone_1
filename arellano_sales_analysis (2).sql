@@ -42,11 +42,6 @@ Where state LIKE 'massachu%';
 SELECT *
 FROM store_sales;
 
--- From the table returned from store sales and looking into the online_sales, they both share product numbers. 
-
-SELECT *
-FROM online_sales;
-
 -- This is the product table with category and sub-category ids for later analysis.
 
 SELECT *
@@ -71,36 +66,39 @@ that tell you what period the data covers?"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
--- Will do a distinct of dates for store sales from beginning to end
+/* I utilize sub-queries to get the the amounts of the store and online sales and then I had to add them up for the overall territory
+I made a second query to show the start and end date of both store and online. demonstrating a 3 year period*/
 
-SELECT DISTINCT min(Transaction_Date) AS StartDate, max(Transaction_Date) AS EndDate 
-FROM store_sales;  -- This returned around 1461 rows from 335129 rows, which in turn mean there has been 1461 days of sales.alter
+SELECT state, 
+		(SELECT SUM(SalesTotal)
+			FROM online_sales
+            WHERE ShiptoState LIKE '%massac%') AS OnlineSales,
+            
+		(SELECT SUM(Sale_Amount)
+        FROM store_sales AS SS JOIN store_locations AS SL
+        ON SS.Store_ID = SL.StoreId
+        WHERE SL.State LIKE '%massac%') AS StoreSales,
+            
+		(SELECT SUM(SalesTotal)
+			FROM online_sales
+            WHERE ShiptoState LIKE '%massac%')
+            +
+        (SELECT SUM(Sale_Amount)
+        FROM store_sales AS SS JOIN store_locations AS SL
+        ON SS.Store_ID = SL.StoreId
+        WHERE SL.State LIKE '%massac%') AS totalsales
+FROM (SELECT State
+		FROM store_locations
+        WHERE State LIKE '%massac%') AS storeLOC
+ORDER BY 1 LIMIT 1 ;
 
--- I will now find out for Bo's territory all STORE sales dates and overall revenue 
 
--- this is to make sure the sum syntax is correct for the next query
-SELECT * 
-FROM store_sales
-WHERE Store_ID IN ('730', '801', '802', '803', '804', '805', '806', '807',
- '808', '809', '810', '811', '812', '813', '814', '815', '816', '817'); 
- -- From 335,129 rows, this query returned 42,010 from the listed store IDs which can help me find the start and end date period.
- 
- 
- -- The query below is to be sure that I have the correct start and end dates for the next query to answer the question according to the store IDs.
-SELECT *
-FROM store_sales
-WHERE Store_ID IN ('730', '801', '802', '803', '804', '805', '806', '807',
- '808', '809', '810', '811', '812', '813', '814', '815', '816', '817')
- ORDER BY Transaction_Date ASC;
- 
- -- The query below would be the answer to the question.
- 
- SELECT min(Transaction_Date) AS StartDate, max(Transaction_Date) AS EndDate, CONCAT('$', format(sum(Sale_Amount), 2)) AS total_rev -- I used gemini to help me type the correct clause for the sum to be in monetary value. 
- FROM store_sales
- WHERE Store_ID IN ('730', '801', '802', '803', '804', '805', '806', '807',
- '808', '809', '810', '811', '812', '813', '814', '815', '816', '817');
- -- The returned rows were from jan. 1, 2022 to dec. 31 2025, meaning it was a 3 year period of sales from the assigned territory. 
 
+SELECT MIN(OS.Date) AS ONLINESTARTDATE, MAX(OS.Date) AS OnlineEndDate,  MIN(SS.Transaction_Date) AS StoreStartDate,MAX(SS.Transaction_Date) AS StoreEndDate
+FROM online_sales AS OS JOIN store_sales AS SS ON OS.ProdNum = SS.Prod_Num
+WHERE OS.ShiptoState LIKE '%massac%';
+
+-- Query above shows a 3 year period for both the store and online sales with store sales starting in jan. 1st, 2022 and online starting on jan. 6th, 2022, with both ending in dec. 31st, 2025
 
  /*
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -110,28 +108,73 @@ Below will be the analysis for the second question presented: What is the revenu
 
 -- The query below is getting all the unique year and month values to show the total rev from the stores in the territory. 
 
-SELECT DATE_FORMAT(Transaction_Date, '%Y-%m') AS Sales_Month, CONCAT('$', format(sum(Sale_Amount), 2)) AS total_rev
-FROM store_sales
-WHERE Store_ID IN ('730', '801', '802', '803', '804', '805', '806', '807',
- '808', '809', '810', '811', '812', '813', '814', '815', '816', '817')
-GROUP BY DATE_FORMAT(Transaction_Date, '%Y-%m') -- I utilized MS co-pilot to help me correctly type the group by clause to get the total revenue for each month. 
-ORDER BY 1 asc;
+-- DATE_FORMAT(Transaction_Date, '%Y-%m')  I utilized MS co-pilot to help me correctly type this year month format
 
+SELECT SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m') AS yearmondates, SUM(SS.Sale_Amount) AS Mon_total
+FROM store_locations AS SL JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massac%'
+GROUP BY SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m');
+
+-- I decided to keep store sales and online sales monthly sales seperate for analysis. 
+
+SELECT DATE_FORMAT(Date, '%Y-%m'), SUM(SalesTotal)
+FROM online_sales
+WHERE ShiptoState LIKE '%massac%'
+GROUP BY DATE_FORMAT(Date, '%Y-%m');
 
 
  /*
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-Below will be the analysis for thRegione third question presented:  Provide a comparison of total revenue for the specific sales territory and the region it belongs to.
+Below will be the analysis for the third question presented:  Provide a comparison of total revenue for the specific sales territory and the region it belongs to.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
-/* It seems that I need to obtain the overall revenue from the region, which is 4 states for the northeast. 
-To accomplish this, I will need to use the join clause on management and store sales table */
 
-SELECT *
-FROM management AS region
-INNER JOIN store_locations AS state ON region.State = state.State
-INNER JOIN store_sales AS overallSales ON state.StoreId = overallSales.Store_ID
-WHERE region LIKE '%northeast%';
+/* It seems that I need to obtain the overall revenue from the region, which is 3 states for the northeast. 
+To accomplish this, I will need to use the join clause on management and store sales table along with online sales*/
 
--- The query above was to make sure I was able to successfully join the tables to get the region data. 
+-- I utilized microsoft co-pilot and the student guide to help me understand the concepts of sub-querying for these queries compared to how I first did them.
+
+SELECT region, SUM(SalesTotal) AS onlinesales, 
+(SELECT SUM(Sale_Amount)
+ FROM management AS m2
+ JOIN store_locations AS SL ON m2.State = SL.State
+ JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+ WHERE region LIKE 'northeast' AND m2.State NOT LIKE '%massac%') AS storesales ,SUM(SalesTotal) +
+(SELECT SUM(Sale_Amount)
+ FROM management AS m2
+ JOIN store_locations AS SL ON m2.State = SL.State
+ JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+ WHERE region LIKE 'northeast' AND m2.State NOT LIKE '%massac%') AS overrallregsales
+FROM management AS m join online_sales AS OS
+ON m.State = OS.ShiptoState 
+WHERE region LIKE 'northeast' AND m.State NOT LIKE '%massac%'
+GROUP BY region;
+
+
+/* The Query above is to obtain the overall sales data excluding the massachussets territory and the Query below is the same query from the
+first question to do a comparasion against the whole region*/
+
+SELECT state, 
+		(SELECT SUM(SalesTotal)
+			FROM online_sales
+            WHERE ShiptoState LIKE '%massac%') AS OnlineSales,
+            
+		(SELECT SUM(Sale_Amount)
+        FROM store_sales AS SS JOIN store_locations AS SL
+        ON SS.Store_ID = SL.StoreId
+        WHERE SL.State LIKE '%massac%') AS StoreSales,
+            
+		(SELECT SUM(SalesTotal)
+			FROM online_sales
+            WHERE ShiptoState LIKE '%massac%')
+            +
+        (SELECT SUM(Sale_Amount)
+        FROM store_sales AS SS JOIN store_locations AS SL
+        ON SS.Store_ID = SL.StoreId
+        WHERE SL.State LIKE '%massac%') AS totalsales
+FROM (SELECT State
+		FROM store_locations
+        WHERE State LIKE '%massac%') AS storeLOC
+ORDER BY 1 LIMIT 1 ;
 
