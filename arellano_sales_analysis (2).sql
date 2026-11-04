@@ -152,10 +152,9 @@ category for the sales territory?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */ 
 
-
 -- For this analysis, I will have to bring in the products table joining the store_sales table.
 
-SELECT DATE_FORMAT(inv.Transaction_Date, '%Y-%m') AS dates, COUNT(inv.id) AS transactions, inv.category, avg(inv.Sale_Amount) AS avgsalesamt
+SELECT DATE_FORMAT(inv.Transaction_Date, '%Y-%m') AS dates, COUNT(inv.id) AS transactions, inv.category, CONCAT('$', format(AVG(inv.Sale_Amount), 2)) AS avgsalesamt
 
 FROM (SELECT m.region, m.state, StoreId
 		FROM management AS m
@@ -201,3 +200,24 @@ Below will be the analysis for the fifth question presented: Can you provide a r
 ranking of online sales performance by state within an online sales territory?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */ 
+
+-- Similar to previous queries, I would have to get the management tables and link it to the stores table. ordering them by their total sales
+
+SELECT StoreLocation AS massac_stores, Store_ID, CONCAT('$', format(SUM(Sale_Amount), 2)) AS Storesales
+FROM management AS m
+JOIN store_locations AS SL ON m.State = SL.State
+JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massac%'
+GROUP BY StoreLocation, Store_ID
+ORDER BY 3 DESC;
+
+-- It seems that the Worcester store is at a high rank in sales, contributing the most in the overall territory (To be sure, I added those sales to get the same overall from the previous queries).
+
+
+
+ /*
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Below will be the analysis for the sixth question presented: What is your recommendation for where to focus sales attention in the next quarter?
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+*/ 
+
