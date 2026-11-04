@@ -97,7 +97,7 @@ Below will be the analysis for the second question presented: What is the revenu
 
 -- DATE_FORMAT(Transaction_Date, '%Y-%m')  I utilized MS co-pilot to help me correctly type this year month format
 
-SELECT SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m') AS yearmondates, SUM(SS.Sale_Amount) AS Mon_total
+SELECT SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m') AS yearmondates,  CONCAT('$', format(SUM(SS.Sale_Amount), 2)) AS Mon_total
 FROM store_locations AS SL JOIN store_sales AS SS 
 ON SL.StoreId = SS.Store_ID
 WHERE SL.State LIKE '%massac%'
@@ -210,7 +210,6 @@ JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
 WHERE SL.State LIKE '%massac%'
 GROUP BY StoreLocation, Store_ID
 ORDER BY 3 DESC;
-
 -- It seems that the Worcester store is at a high rank in sales, contributing the most in the overall territory (To be sure, I added those sales to get the same overall from the previous queries).
 
 
@@ -221,3 +220,153 @@ Below will be the analysis for the sixth question presented: What is your recomm
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */ 
 
+-- I noticed that some stores were below $600,000 in overall sales, I want to see why and their performance of sales 
+
+
+-- First I will do a count to find out how many sales below 100 stores did compared to store 817
+SELECT SS.Store_ID, COUNT(Sale_Amount) AS storesales,
+
+(SELECT COUNT(Sale_Amount)
+FROM store_sales
+WHERE Store_ID = 817 AND Sale_Amount <= 100) AS 817storesales
+-- Subquery to reference the 817 store performance in sales below $100
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+AND Sale_Amount <= 100
+GROUP BY SS.Store_ID
+ORDER BY 2 DESC;
+
+-- Below is the average of the amount of sales done below $100
+
+SELECT AVG(S.storesales)
+FROM (SELECT SS.Store_ID, COUNT(Sale_Amount) AS storesales
+		FROM store_locations AS SL 
+		JOIN store_sales AS SS 
+		ON SL.StoreId = SS.Store_ID
+        WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+		AND Sale_Amount <= 100
+        GROUP BY SS.Store_ID) AS S;
+
+
+-- Query below will show the all the $100 sales ranked from high to low per store compared to 817. 
+
+SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales,
+
+(SELECT SUM(Sale_Amount)
+FROM store_sales
+WHERE Store_ID = 817 AND Sale_Amount <= 100) AS 817storesales
+-- Subquery to reference the 817 store performance in sales below 100 dollars
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+AND Sale_Amount <= 100
+GROUP BY SS.Store_ID
+ORDER BY 2 DESC; -- ORDER BY shows that store 804 has higher sales from below $100 sales. 
+-- This is going to exclude store 817 from the table, since it is the only one with 600k or higher
+
+-- I will make a query to find out about the average overall for sales under the 100 dollars 
+
+SELECT AVG(S.storesales)
+FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
+		FROM store_locations AS SL 
+		JOIN store_sales AS SS 
+		ON SL.StoreId = SS.Store_ID
+        WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+		AND Sale_Amount <= 100
+        GROUP BY SS.Store_ID) AS S;
+
+-- Average overall sales for the below 100 dollar sales is $43,605
+
+-- I will now check overall sales above or equal to 1000 for all stores, First I will count those sales 
+		-- Queries below are similar to the above with the added change in the where clause and changing sum to total in the select clasuses
+SELECT SS.Store_ID, COUNT(Sale_Amount) AS storesales,
+
+(SELECT COUNT(Sale_Amount)
+FROM store_sales
+WHERE Store_ID = 817 AND Sale_Amount >= 1000) AS 817storesales
+-- Subquery to reference the 817 store performance in sales below 100 dollars
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+AND Sale_Amount >= 1000
+GROUP BY SS.Store_ID
+ORDER BY 2 DESC;
+
+-- It appears that 807 has 107 sales above 1000 dollars
+
+SELECT AVG(S.storesales)
+FROM (SELECT SS.Store_ID, COUNT(Sale_Amount) AS storesales
+		FROM store_locations AS SL 
+		JOIN store_sales AS SS 
+		ON SL.StoreId = SS.Store_ID
+        WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+		AND Sale_Amount >= 1000
+        GROUP BY SS.Store_ID) AS S;
+
+-- From all the stores, excluding 817, the average is 82 sales with 1000 or above. 
+
+SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales,
+
+(SELECT SUM(Sale_Amount)
+FROM store_sales
+WHERE Store_ID = 817 AND Sale_Amount >= 1000) AS 817storesales
+-- Subquery to reference the 817 store performance in sales below 100 dollars
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+AND Sale_Amount >= 1000
+GROUP BY SS.Store_ID
+ORDER BY 2 DESC;
+
+
+SELECT AVG(S.storesales)
+FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
+		FROM store_locations AS SL 
+		JOIN store_sales AS SS 
+		ON SL.StoreId = SS.Store_ID
+        WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
+		AND Sale_Amount >= 1000
+        GROUP BY SS.Store_ID) AS S; 
+        
+        
+-- I want to know the highest sale from the overall stores in the territory
+
+SELECT MAX(Sale_Amount) AS highsales
+FROM store_locations AS SL 
+		JOIN store_sales AS SS 
+		ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%';
+
+-- 1763.70 was the highest sale from 16 stores, where stores 803 and 812 were below those higher sales. 
+
+-- Query below will allow me to check how many sales were made the maximum sales in which store 811 made 10 sales with that amount.
+
+SELECT Store_ID, COUNT(Sale_Amount) AS highsales
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND Sale_Amount = 1763.70
+GROUP BY 1
+ORDER BY 2 DESC;
+
+-- Query below will show what is the average sales with 1763.70
+
+SELECT AVG(S.highsales)
+FROM (SELECT Store_ID, COUNT(Sale_Amount) AS highsales
+FROM store_locations AS SL 
+JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massach%' AND Sale_Amount = 1763.70
+GROUP BY 1
+ORDER BY 2 DESC) AS S;
+
+
+/* From the above analysis, my recommendation for stores is to make higher sales above $100 to catch up with store 817
+While a couple of stores were able to surpass store 817 when it came to sales $1700 or above, their numebrs when it comes to sales below 100 
+are half of that of 817. All stores, not excluding 817, should strive to bring higher sales above $100 or more below $100 to contribute to overall revenue to the territory. 
+It is always the small things that count to something bigger, which was seen with store 817. */
