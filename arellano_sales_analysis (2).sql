@@ -75,7 +75,7 @@ GROUP BY region;
 
 -- The query above is to make sure I get the correct overall sales and converting the output of the summed sales into currency, which I was helped by MS CoPilot
 
-SELECT region, m.state AS STATE, CONCAT('$', format(SUM(Sale_Amount), 2)) AS overallsales,
+SELECT region as REGION, m.state AS STATE, CONCAT('$', format(SUM(Sale_Amount), 2)) AS overallsales,
  MIN(Transaction_Date) AS startdate, MAX(Transaction_Date) as enddate
 FROM management AS m 
 JOIN store_locations AS SL ON m.State = SL.State
@@ -97,11 +97,6 @@ Below will be the analysis for the second question presented: What is the revenu
 
 -- DATE_FORMAT(Transaction_Date, '%Y-%m')  I utilized MS co-pilot to help me correctly type this year month format
 
-SELECT SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m') AS yearmondates,  CONCAT('$', format(SUM(SS.Sale_Amount), 2)) AS Mon_total
-FROM store_locations AS SL JOIN store_sales AS SS 
-ON SL.StoreId = SS.Store_ID
-WHERE SL.State LIKE '%massac%'
-GROUP BY SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m');
 
 -- My first inital query from above provided the answer to the question presented, I ereased the online sales from below after understanding that online sales are its own territory.
 
@@ -220,7 +215,7 @@ Below will be the analysis for the sixth question presented: What is your recomm
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */ 
 
--- I noticed that some stores were below $600,000 in overall sales, I want to see why and their performance of sales 
+-- I noticed that some stores were below $600,000 in overall sales, I want to see why and their performance of sales from below $100 and above $1000. 
 
 
 -- First I will do a count to find out how many sales below 100 stores did compared to store 817
@@ -366,7 +361,7 @@ GROUP BY 1
 ORDER BY 2 DESC) AS S;
 
 
-/* From the above analysis, my recommendation for stores is to make higher sales above $100 to catch up with store 817
-While a couple of stores were able to surpass store 817 when it came to sales $1700 or above, their numebrs when it comes to sales below 100 
-are half of that of 817. All stores, not excluding 817, should strive to bring higher sales above $100 or more below $100 to contribute to overall revenue to the territory. 
+/* From the above analysis, my recommendation for the stores in the territory is to have more sales below $100 to catch up with store 817
+While a couple of stores were able to surpass store 817 when it came to sales $1700 or above, their sales below 100 
+are half of that of 817, which contributed to ninenty grand to overall revenue. All stores, not excluding 817, should strive to bring more sales below $100 and sales above 1000 to contribute to overall revenue to the territory. 
 It is always the small things that count to something bigger, which was seen with store 817. */

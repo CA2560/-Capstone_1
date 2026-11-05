@@ -1,0 +1,289 @@
+dates,transactions,category,avgsalesamt
+2022-01,73,Textbooks,$168.95
+2022-01,83,"Apparel and Merchandise",$36.24
+2022-01,112,"Technology & Accessories",$437.05
+2022-01,106,"Stationery and Supplies",$10.74
+2022-01,93,"Art Supplies",$31.23
+2022-01,41,"Books (General)",$25.92
+2022-02,85,"Stationery and Supplies",$10.89
+2022-02,81,"Art Supplies",$31.43
+2022-02,95,"Apparel and Merchandise",$33.96
+2022-02,93,Textbooks,$172.57
+2022-02,103,"Technology & Accessories",$405.47
+2022-02,36,"Books (General)",$30.72
+2022-03,85,"Apparel and Merchandise",$28.00
+2022-03,88,"Art Supplies",$35.79
+2022-03,102,Textbooks,$183.29
+2022-03,116,"Technology & Accessories",$439.79
+2022-03,82,"Stationery and Supplies",$9.93
+2022-03,43,"Books (General)",$31.07
+2022-04,114,"Technology & Accessories",$505.03
+2022-04,88,"Apparel and Merchandise",$32.41
+2022-04,41,"Books (General)",$29.68
+2022-04,91,Textbooks,$182.18
+2022-04,116,"Stationery and Supplies",$9.72
+2022-04,71,"Art Supplies",$27.97
+2022-05,105,"Stationery and Supplies",$9.51
+2022-05,96,"Art Supplies",$28.10
+2022-05,39,"Books (General)",$27.46
+2022-05,114,"Technology & Accessories",$463.90
+2022-05,75,"Apparel and Merchandise",$33.63
+2022-05,91,Textbooks,$173.03
+2022-06,71,"Art Supplies",$27.71
+2022-06,116,"Stationery and Supplies",$10.04
+2022-06,94,Textbooks,$184.74
+2022-06,89,"Apparel and Merchandise",$34.83
+2022-06,38,"Books (General)",$26.31
+2022-06,114,"Technology & Accessories",$496.76
+2022-07,93,"Stationery and Supplies",$9.33
+2022-07,106,Textbooks,$170.82
+2022-07,80,"Art Supplies",$30.19
+2022-07,90,"Apparel and Merchandise",$33.57
+2022-07,45,"Books (General)",$30.59
+2022-07,95,"Technology & Accessories",$436.67
+2022-08,118,"Stationery and Supplies",$10.08
+2022-08,86,"Apparel and Merchandise",$31.15
+2022-08,46,"Books (General)",$27.07
+2022-08,107,Textbooks,$176.97
+2022-08,74,"Art Supplies",$28.21
+2022-08,108,"Technology & Accessories",$438.94
+2022-09,81,"Art Supplies",$31.69
+2022-09,89,"Technology & Accessories",$392.56
+2022-09,87,Textbooks,$180.58
+2022-09,104,"Stationery and Supplies",$10.13
+2022-09,82,"Apparel and Merchandise",$34.78
+2022-09,52,"Books (General)",$30.68
+2022-10,81,"Art Supplies",$30.00
+2022-10,101,"Apparel and Merchandise",$31.87
+2022-10,115,Textbooks,$184.44
+2022-10,41,"Books (General)",$26.28
+2022-10,104,"Stationery and Supplies",$9.63
+2022-10,99,"Technology & Accessories",$440.17
+2022-11,99,"Stationery and Supplies",$9.82
+2022-11,94,"Technology & Accessories",$481.12
+2022-11,96,Textbooks,$188.89
+2022-11,81,"Art Supplies",$30.96
+2022-11,32,"Books (General)",$24.24
+2022-11,95,"Apparel and Merchandise",$32.00
+2022-12,109,Textbooks,$187.19
+2022-12,89,"Apparel and Merchandise",$35.25
+2022-12,72,"Art Supplies",$27.30
+2022-12,106,"Technology & Accessories",$398.43
+2022-12,108,"Stationery and Supplies",$10.99
+2022-12,39,"Books (General)",$28.18
+2023-01,160,"Apparel and Merchandise",$32.55
+2023-01,175,"Stationery and Supplies",$10.32
+2023-01,106,Textbooks,$175.40
+2023-01,124,"Art Supplies",$35.87
+2023-01,63,"Books (General)",$32.00
+2023-01,199,"Technology & Accessories",$539.29
+2023-02,157,"Stationery and Supplies",$9.82
+2023-02,96,Textbooks,$169.98
+2023-02,168,"Technology & Accessories",$449.65
+2023-02,152,"Apparel and Merchandise",$32.83
+2023-02,123,"Art Supplies",$34.95
+2023-02,55,"Books (General)",$32.10
+2023-03,184,"Technology & Accessories",$447.30
+2023-03,154,"Apparel and Merchandise",$34.31
+2023-03,100,Textbooks,$175.09
+2023-03,53,"Books (General)",$28.40
+2023-03,119,"Art Supplies",$33.35
+2023-03,177,"Stationery and Supplies",$10.59
+2023-04,187,"Technology & Accessories",$415.92
+2023-04,110,Textbooks,$166.03
+2023-04,121,"Art Supplies",$31.74
+2023-04,172,"Apparel and Merchandise",$35.58
+2023-04,61,"Books (General)",$27.53
+2023-04,160,"Stationery and Supplies",$10.56
+2023-05,168,"Technology & Accessories",$472.68
+2023-05,157,"Stationery and Supplies",$10.64
+2023-05,127,"Art Supplies",$34.46
+2023-05,99,Textbooks,$170.95
+2023-05,61,"Books (General)",$27.06
+2023-05,160,"Apparel and Merchandise",$31.18
+2023-06,160,"Technology & Accessories",$445.66
+2023-06,146,"Apparel and Merchandise",$28.66
+2023-06,120,"Art Supplies",$33.55
+2023-06,162,"Stationery and Supplies",$10.67
+2023-06,111,Textbooks,$169.06
+2023-06,58,"Books (General)",$29.32
+2023-07,167,"Technology & Accessories",$500.23
+2023-07,144,Textbooks,$176.39
+2023-07,159,"Stationery and Supplies",$9.91
+2023-07,148,"Apparel and Merchandise",$29.90
+2023-07,136,"Art Supplies",$29.72
+2023-07,71,"Books (General)",$25.52
+2023-08,149,Textbooks,$171.59
+2023-08,168,"Stationery and Supplies",$10.17
+2023-08,175,"Technology & Accessories",$514.20
+2023-08,133,"Art Supplies",$25.44
+2023-08,133,"Apparel and Merchandise",$30.57
+2023-08,58,"Books (General)",$25.92
+2023-09,164,"Stationery and Supplies",$9.42
+2023-09,192,"Technology & Accessories",$447.04
+2023-09,133,Textbooks,$179.80
+2023-09,60,"Books (General)",$25.24
+2023-09,152,"Apparel and Merchandise",$32.39
+2023-09,122,"Art Supplies",$34.76
+2023-10,136,"Apparel and Merchandise",$32.47
+2023-10,174,"Technology & Accessories",$442.39
+2023-10,159,"Stationery and Supplies",$9.94
+2023-10,111,"Art Supplies",$29.38
+2023-10,149,Textbooks,$173.93
+2023-10,56,"Books (General)",$29.93
+2023-11,59,"Books (General)",$25.49
+2023-11,146,"Apparel and Merchandise",$31.33
+2023-11,176,"Technology & Accessories",$389.55
+2023-11,145,Textbooks,$175.37
+2023-11,166,"Stationery and Supplies",$10.45
+2023-11,122,"Art Supplies",$31.71
+2023-12,155,"Apparel and Merchandise",$29.75
+2023-12,166,"Technology & Accessories",$404.55
+2023-12,138,Textbooks,$165.59
+2023-12,159,"Stationery and Supplies",$11.15
+2023-12,117,"Art Supplies",$27.32
+2023-12,55,"Books (General)",$37.36
+2024-01,173,"Stationery and Supplies",$9.75
+2024-01,190,"Technology & Accessories",$449.49
+2024-01,141,"Art Supplies",$34.18
+2024-01,107,Textbooks,$170.07
+2024-01,172,"Apparel and Merchandise",$33.54
+2024-01,63,"Books (General)",$32.36
+2024-02,168,"Technology & Accessories",$451.83
+2024-02,141,"Apparel and Merchandise",$33.96
+2024-02,95,Textbooks,$175.50
+2024-02,46,"Books (General)",$28.39
+2024-02,105,"Art Supplies",$33.79
+2024-02,164,"Stationery and Supplies",$10.65
+2024-03,114,Textbooks,$166.16
+2024-03,189,"Technology & Accessories",$413.51
+2024-03,124,"Art Supplies",$31.85
+2024-03,179,"Apparel and Merchandise",$35.29
+2024-03,64,"Books (General)",$27.92
+2024-03,170,"Stationery and Supplies",$10.70
+2024-04,147,"Stationery and Supplies",$10.49
+2024-04,166,"Technology & Accessories",$476.11
+2024-04,124,"Art Supplies",$34.41
+2024-04,95,Textbooks,$170.99
+2024-04,58,"Books (General)",$26.61
+2024-04,153,"Apparel and Merchandise",$31.31
+2024-05,164,"Technology & Accessories",$454.03
+2024-05,153,"Apparel and Merchandise",$28.91
+2024-05,123,"Art Supplies",$33.28
+2024-05,170,"Stationery and Supplies",$10.73
+2024-05,117,Textbooks,$168.29
+2024-05,58,"Books (General)",$29.32
+2024-06,163,"Technology & Accessories",$493.14
+2024-06,138,Textbooks,$177.36
+2024-06,151,"Stationery and Supplies",$9.80
+2024-06,141,"Apparel and Merchandise",$29.69
+2024-06,133,"Art Supplies",$29.89
+2024-06,71,"Books (General)",$25.52
+2024-07,149,Textbooks,$171.59
+2024-07,168,"Stationery and Supplies",$10.17
+2024-07,175,"Technology & Accessories",$514.20
+2024-07,133,"Art Supplies",$25.44
+2024-07,133,"Apparel and Merchandise",$30.57
+2024-07,58,"Books (General)",$25.92
+2024-08,170,"Stationery and Supplies",$9.32
+2024-08,198,"Technology & Accessories",$438.92
+2024-08,136,Textbooks,$179.63
+2024-08,62,"Books (General)",$24.92
+2024-08,156,"Apparel and Merchandise",$32.40
+2024-08,128,"Art Supplies",$34.43
+2024-09,132,"Apparel and Merchandise",$32.45
+2024-09,168,"Technology & Accessories",$451.80
+2024-09,146,Textbooks,$173.97
+2024-09,105,"Art Supplies",$29.49
+2024-09,153,"Stationery and Supplies",$10.07
+2024-09,54,"Books (General)",$30.47
+2024-10,60,"Books (General)",$25.36
+2024-10,148,"Apparel and Merchandise",$31.50
+2024-10,183,"Technology & Accessories",$394.67
+2024-10,152,Textbooks,$173.85
+2024-10,171,"Stationery and Supplies",$10.39
+2024-10,125,"Art Supplies",$31.77
+2024-11,131,Textbooks,$166.83
+2024-11,154,"Stationery and Supplies",$11.24
+2024-11,54,"Books (General)",$37.72
+2024-11,114,"Art Supplies",$27.13
+2024-11,159,"Technology & Accessories",$399.32
+2024-11,153,"Apparel and Merchandise",$29.56
+2024-12,160,"Apparel and Merchandise",$32.55
+2024-12,175,"Stationery and Supplies",$10.32
+2024-12,106,Textbooks,$175.40
+2024-12,124,"Art Supplies",$35.87
+2024-12,63,"Books (General)",$32.00
+2024-12,199,"Technology & Accessories",$539.29
+2025-01,77,Textbooks,$167.82
+2025-01,323,"Stationery and Supplies",$10.23
+2025-01,282,"Apparel and Merchandise",$32.46
+2025-01,249,"Technology & Accessories",$454.47
+2025-01,247,"Art Supplies",$34.06
+2025-01,128,"Books (General)",$29.63
+2025-02,280,"Stationery and Supplies",$9.38
+2025-02,267,"Apparel and Merchandise",$33.41
+2025-02,71,Textbooks,$173.66
+2025-02,206,"Technology & Accessories",$516.36
+2025-02,222,"Art Supplies",$32.85
+2025-02,96,"Books (General)",$28.08
+2025-03,243,"Apparel and Merchandise",$31.57
+2025-03,271,"Stationery and Supplies",$9.62
+2025-03,289,"Technology & Accessories",$422.32
+2025-03,104,Textbooks,$177.50
+2025-03,211,"Art Supplies",$33.60
+2025-03,98,"Books (General)",$30.29
+2025-04,151,"Books (General)",$31.41
+2025-04,427,"Apparel and Merchandise",$30.44
+2025-04,155,Textbooks,$168.25
+2025-04,291,"Art Supplies",$33.35
+2025-04,446,"Stationery and Supplies",$10.04
+2025-04,203,"Technology & Accessories",$486.55
+2025-05,402,"Apparel and Merchandise",$34.15
+2025-05,160,"Books (General)",$33.57
+2025-05,275,"Art Supplies",$33.81
+2025-05,425,"Stationery and Supplies",$9.81
+2025-05,187,"Technology & Accessories",$489.23
+2025-05,201,Textbooks,$167.46
+2025-06,362,"Apparel and Merchandise",$31.73
+2025-06,295,"Art Supplies",$33.16
+2025-06,149,"Books (General)",$32.83
+2025-06,215,"Technology & Accessories",$495.74
+2025-06,428,"Stationery and Supplies",$9.81
+2025-06,193,Textbooks,$172.86
+2025-07,313,"Stationery and Supplies",$9.85
+2025-07,179,"Art Supplies",$35.79
+2025-07,243,"Apparel and Merchandise",$33.40
+2025-07,131,Textbooks,$159.81
+2025-07,268,"Technology & Accessories",$559.43
+2025-07,108,"Books (General)",$29.88
+2025-08,295,"Technology & Accessories",$459.66
+2025-08,259,"Stationery and Supplies",$10.03
+2025-08,252,"Apparel and Merchandise",$30.50
+2025-08,170,"Art Supplies",$34.44
+2025-08,97,"Books (General)",$25.38
+2025-08,125,Textbooks,$165.33
+2025-09,134,Textbooks,$165.66
+2025-09,194,"Art Supplies",$33.60
+2025-09,266,"Technology & Accessories",$478.04
+2025-09,228,"Stationery and Supplies",$10.13
+2025-09,104,"Books (General)",$25.87
+2025-09,249,"Apparel and Merchandise",$30.62
+2025-10,196,Textbooks,$162.16
+2025-10,373,"Apparel and Merchandise",$30.51
+2025-10,384,"Stationery and Supplies",$9.98
+2025-10,455,"Technology & Accessories",$470.16
+2025-10,192,"Books (General)",$29.63
+2025-10,341,"Art Supplies",$31.59
+2025-11,184,"Art Supplies",$33.42
+2025-11,258,"Apparel and Merchandise",$32.12
+2025-11,142,Textbooks,$170.14
+2025-11,296,"Technology & Accessories",$513.14
+2025-11,230,"Stationery and Supplies",$10.40
+2025-11,107,"Books (General)",$30.19
+2025-12,223,"Art Supplies",$30.07
+2025-12,267,"Stationery and Supplies",$10.10
+2025-12,130,Textbooks,$162.62
+2025-12,263,"Apparel and Merchandise",$32.64
+2025-12,293,"Technology & Accessories",$492.79
+2025-12,105,"Books (General)",$28.30
