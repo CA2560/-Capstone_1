@@ -23,9 +23,7 @@ FROM sample_sales.management
 Where SalesManager LIKE '%bo%';
 
 /* Bo Heap wants to know the OVERALL sales of the region for this analysis. 
-I will start to look at all the tables we have regarding sales, which may include 
-online sales if one of the columns include sales. I will also have to look into 
-the dates as well. */ 
+I will start to look at all the tables we have regarding sales */ 
 
 -- Seeing all store ids for the state related to Bo Heap in massachuscets. 
 
@@ -33,11 +31,11 @@ SELECT *
 FROM store_locations
 Where state LIKE 'massachu%';
 
-/* This returned 18 rows, meaning under Bo heap there are 18 store locations he has a assigned to his territory.
+/* This returned 18 rows, meaning under Bo heap there are 18 store locations he has assigned to his territory.
 730, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817 are his store IDs.
 */
 
--- I will read through the tables for both store and online sales. starting with store sales
+-- I will read through the tables for store sales.
 
 SELECT *
 FROM store_sales;
@@ -73,7 +71,7 @@ JOIN store_sales AS SS ON SL.StoreId = SS.Store_ID
 WHERE region LIKE 'northeast' and m.state LIKE '%massac%'
 GROUP BY region;
 
--- The query above is to make sure I get the correct overall sales and converting the output of the summed sales into currency, which I was helped by MS CoPilot
+-- The query above is to make sure I get the correct overall sales and converting the output of the summed sales into currency, which I was helped by MS CoPilot to get that conversion.
 
 SELECT region as REGION, m.state AS STATE, CONCAT('$', format(SUM(Sale_Amount), 2)) AS overallsales,
  MIN(Transaction_Date) AS startdate, MAX(Transaction_Date) as enddate
@@ -95,12 +93,17 @@ Below will be the analysis for the second question presented: What is the revenu
 
 -- The query below is getting all the unique year and month values to show the total rev from the stores in the territory. 
 
--- DATE_FORMAT(Transaction_Date, '%Y-%m')  I utilized MS co-pilot to help me correctly type this year month format
+-- DATE_FORMAT(Transaction_Date, '%Y-%m')  I utilized MS co-pilot to help me correctly type this year month format.
 
+SELECT SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m') AS yearmondates,  CONCAT('$', format(SUM(SS.Sale_Amount), 2)) AS Mon_total
+FROM store_locations AS SL JOIN store_sales AS SS 
+ON SL.StoreId = SS.Store_ID
+WHERE SL.State LIKE '%massac%'
+GROUP BY SL.State, DATE_FORMAT(SS.Transaction_Date, '%Y-%m');
 
 -- My first inital query from above provided the answer to the question presented, I ereased the online sales from below after understanding that online sales are its own territory.
 
-
+-- The results show the totals from year-month, in which I coppied the Mon_total column to calculate to get the total amount from the previous query.
  /*
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 Below will be the analysis for the third question presented:  Provide a comparison of total revenue for the specific sales territory and the region it belongs to.
@@ -185,7 +188,7 @@ ON SS.Store_ID = SL.StoreId
 WHERE SL.State LIKE '%massac%' AND Prod_Num = '105350-T'
 ORDER BY 2 ASC;
 
-The above queries were to make sure I got the transactions correctly */
+The above queries in multi-comment were to make sure I got the transactions correctly */
 
 
 
@@ -233,6 +236,8 @@ AND Sale_Amount <= 100
 GROUP BY SS.Store_ID
 ORDER BY 2 DESC;
 
+-- Store 804 had sales of 1690 from sales $100 and below.
+
 -- Below is the average of the amount of sales done below $100
 
 SELECT AVG(S.storesales)
@@ -243,6 +248,8 @@ FROM (SELECT SS.Store_ID, COUNT(Sale_Amount) AS storesales
         WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
 		AND Sale_Amount <= 100
         GROUP BY SS.Store_ID) AS S;
+        
+-- Average is 1591
 
 
 -- Query below will show the all the $100 sales ranked from high to low per store compared to 817. 
@@ -262,7 +269,9 @@ GROUP BY SS.Store_ID
 ORDER BY 2 DESC; -- ORDER BY shows that store 804 has higher sales from below $100 sales. 
 -- This is going to exclude store 817 from the table, since it is the only one with 600k or higher
 
--- I will make a query to find out about the average overall for sales under the 100 dollars 
+-- Store 804 had over sales of $48,000 from sales $100 and below.
+
+-- I will make a query to find out about the average overall for sales under the 100 dollars.
 
 SELECT AVG(S.storesales)
 FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
@@ -273,7 +282,7 @@ FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
 		AND Sale_Amount <= 100
         GROUP BY SS.Store_ID) AS S;
 
--- Average overall sales for the below 100 dollar sales is $43,605
+-- Average overall sales for sales $100 and belows is $43,605
 
 -- I will now check overall sales above or equal to 1000 for all stores, First I will count those sales 
 		-- Queries below are similar to the above with the added change in the where clause and changing sum to total in the select clasuses
@@ -318,6 +327,8 @@ AND Sale_Amount >= 1000
 GROUP BY SS.Store_ID
 ORDER BY 2 DESC;
 
+-- Store 807 has sales valuing $140,000 from sales that are $1000 and above 
+
 
 SELECT AVG(S.storesales)
 FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
@@ -327,6 +338,8 @@ FROM (SELECT SS.Store_ID, SUM(Sale_Amount) AS storesales
         WHERE SL.State LIKE '%massach%' AND  Store_ID != 817
 		AND Sale_Amount >= 1000
         GROUP BY SS.Store_ID) AS S; 
+        
+-- Average sales of $1000 and above was 110926.84
         
         
 -- I want to know the highest sale from the overall stores in the territory
@@ -349,9 +362,11 @@ WHERE SL.State LIKE '%massach%' AND Sale_Amount = 1763.70
 GROUP BY 1
 ORDER BY 2 DESC;
 
+-- Showed that store 811 had high sales of 1763. 
+
 -- Query below will show what is the average sales with 1763.70
 
-SELECT AVG(S.highsales)
+SELECT AVG(S.highsales) AS Avgsales1763
 FROM (SELECT Store_ID, COUNT(Sale_Amount) AS highsales
 FROM store_locations AS SL 
 JOIN store_sales AS SS 
@@ -360,8 +375,10 @@ WHERE SL.State LIKE '%massach%' AND Sale_Amount = 1763.70
 GROUP BY 1
 ORDER BY 2 DESC) AS S;
 
+-- It is around 4 sales
 
-/* From the above analysis, my recommendation for the stores in the territory is to have more sales below $100 to catch up with store 817
+
+/* From the above analysis, my recommendation for the stores in the territory is to have more sales $100 and below and $1000 and abovr to catch up with store 817
 While a couple of stores were able to surpass store 817 when it came to sales $1700 or above, their sales below 100 
 are half of that of 817, which contributed to ninenty grand to overall revenue. All stores, not excluding 817, should strive to bring more sales below $100 and sales above 1000 to contribute to overall revenue to the territory. 
 It is always the small things that count to something bigger, which was seen with store 817. */
